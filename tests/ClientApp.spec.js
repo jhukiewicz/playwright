@@ -1,4 +1,5 @@
 const {test, expect} = require('@playwright/test')
+const assert = require("node:assert");
 
 test('Register and login test', async ({browser}) => {
     const context = await browser.newContext();
@@ -18,6 +19,11 @@ test('Register and login test', async ({browser}) => {
     const accountCreated = page.getByText('Account Created Successfully');
     const loginButton = page.getByText('login');
     const firstItem = page.locator('//div/h5/b').nth(0);
+
+    const addToCartZaraCoatButton = page.locator("(//div//div//button)[2]");
+    const cartButton = page.locator("(//button[contains(text(),'Cart')])[1]");
+    const itemNumber = page.locator(".itemNumber:nth-of-type(1)");
+    const checkoutButton = page.locator("//button[text() = 'Checkout']");
 
     // const emailValue = getRandomEmail();
     // let passwordValue = '!Zxcv1221';
@@ -50,10 +56,11 @@ test('Register and login test', async ({browser}) => {
     await page.waitForLoadState('networkidle')
 
     await page.locator(".card-body b").waitFor();
-    const titles = await page.locator(".card-body b").allTextContents();
-    console.log()
 
-
+    await addToCartZaraCoatButton.click();
+    await cartButton.click();
+    await expect(itemNumber).toContainText('#67a8dde5c0d3e6622a297cc8');
+    await checkoutButton.click();
 })
 
 function getRandomEmail() {

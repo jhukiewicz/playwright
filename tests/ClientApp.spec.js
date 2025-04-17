@@ -24,6 +24,18 @@ test('Register and login test', async ({browser}) => {
     const cartButton = page.locator("(//button[contains(text(),'Cart')])[1]");
     const itemNumber = page.locator(".itemNumber:nth-of-type(1)");
     const checkoutButton = page.locator("//button[text() = 'Checkout']");
+    const creditCardNumberInput = page.locator("//div[text()='Credit Card Number ']/../input");
+    const expiryMonth = page.locator('.input.ddl').nth(0);
+    const expiryYear = page.locator('.input.ddl').nth(1);
+
+    const cvvCode = page.locator('input.txt').nth(1);
+    const couponInput = page.locator('input.txt').nth(3);
+    const couponButton = page.locator('//button[text()="Apply Coupon"]');
+    const couponAppliedMessage = page.locator('//form//div//div//p');
+    const emailLabel = page.locator('//div//label');
+    const countryInput = page.locator('input.txt').nth(5);
+    const countrySearchResult = page.locator('//div//section//button');
+    const placeOrder = page.locator('.action__submit');
 
     // const emailValue = getRandomEmail();
     // let passwordValue = '!Zxcv1221';
@@ -55,12 +67,26 @@ test('Register and login test', async ({browser}) => {
 
     await page.waitForLoadState('networkidle')
 
-    await page.locator(".card-body b").waitFor();
+    // await page.locator(".card-body b").waitFor();
 
     await addToCartZaraCoatButton.click();
     await cartButton.click();
     await expect(itemNumber).toContainText('#67a8dde5c0d3e6622a297cc8');
     await checkoutButton.click();
+
+    await creditCardNumberInput.fill("4246 321 5284 3200");
+    await expiryMonth.selectOption('05');
+    await expiryYear.selectOption('28');
+    await cvvCode.fill('205');
+    await couponInput.fill('rahulshettyacademy');
+    await couponButton.click();
+
+    await expect(couponAppliedMessage).toContainText('* Coupon Applied');
+    await expect(emailLabel).toContainText(emailValue);
+    await countryInput.pressSequentially('Poland');
+    await countrySearchResult.click();
+    await placeOrder.click();
+
 })
 
 function getRandomEmail() {

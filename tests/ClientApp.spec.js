@@ -36,6 +36,10 @@ test('Register and login test', async ({browser}) => {
     const countryInput = page.locator('input.txt').nth(5);
     const countrySearchResult = page.locator('//div//section//button');
     const placeOrder = page.locator('.action__submit');
+    const listOfItems = page.locator('tbody tr');
+
+    const ordersHistory = page.locator('//label[text()= " Orders History Page "]');
+
 
     // const emailValue = getRandomEmail();
     // let passwordValue = '!Zxcv1221';
@@ -86,6 +90,13 @@ test('Register and login test', async ({browser}) => {
     await countryInput.pressSequentially('Poland');
     await countrySearchResult.click();
     await placeOrder.click();
+
+    const orderNumber = await page.locator('//label[@class = "ng-star-inserted"]').textContent();
+
+    const byText = page.getByText(orderNumber.replaceAll(' | ', ''));
+    await ordersHistory.click();
+    await page.pause();
+    await ordersHistory.locator(byText).click()
 
 })
 
